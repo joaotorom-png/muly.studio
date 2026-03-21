@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MULY - Accesorios Artesanales</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Alpine.js -->
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        [x-cloak] { display: none !important; }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body 
+    x-data="mulyApp()" 
+    class="min-h-screen selection:bg-rose-200 selection:text-slate-900 font-sans text-slate-900 bg-white"
+    x-init="initIcons()"
+>
+    <!-- Announcement Bar -->
+    <div class="bg-slate-900 text-white py-2 text-center text-[10px] uppercase tracking-[0.2em] font-medium z-[60] relative overflow-x-auto whitespace-nowrap px-4 scrollbar-hide">
+        Envío gratuito en pedidos superiores a 35€ • Hecho a mano con amor
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-9 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-rose-100 border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+            <div class="flex-1 hidden md:flex gap-8 text-[10px] uppercase tracking-widest font-semibold">
+                <a href="#coleccion" class="hover:text-rose-600 transition-colors">Colección</a>
+                <a href="#historia" class="hover:text-rose-600 transition-colors">Historia</a>
+            </div>
+            
+            <a href="#" class="text-xl sm:text-2xl font-serif tracking-tighter font-medium">MULY</a>
+            
+            <div class="flex-1 flex justify-end items-center gap-4 sm:gap-6">
+                <div class="hidden md:flex gap-8 text-[10px] uppercase tracking-widest font-semibold">
+                    <a href="#contacto" class="hover:text-rose-600 transition-colors">Contacto</a>
+                </div>
+                
+                <!-- Wishlist Button -->
+                <button 
+                    @click="isWishlistOpen = true"
+                    class="relative p-2 hover:text-rose-600 transition-colors group"
+                    title="Favoritos"
+                >
+                    <i data-lucide="heart" :class="wishlist.length > 0 ? 'text-rose-600 fill-current' : ''" class="w-[18px] h-[18px]"></i>
+                    <template x-if="wishlist.length > 0">
+                        <span class="absolute top-0 right-0 bg-rose-600 text-white text-[8px] font-bold rounded-full w-4 h-4 flex items-center justify-center" x-text="wishlist.length"></span>
+                    </template>
+                </button>
+                
+                <button 
+                    class="md:hidden p-2"
+                    @click="isMenuOpen = !isMenuOpen"
+                >
+                    <i x-show="!isMenuOpen" data-lucide="menu" class="w-5 h-5"></i>
+                    <i x-show="isMenuOpen" data-lucide="x" class="w-5 h-5 text-rose-600"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div 
+        x-show="isMenuOpen" 
+        x-cloak
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0 translate-x-full"
+        x-transition:enter-end="opacity-100 translate-x-0"
+        x-transition:leave="transition ease-in duration-300"
+        x-transition:leave-start="opacity-100 translate-x-0"
+        x-transition:leave-end="opacity-0 translate-x-full"
+        class="fixed inset-0 z-[65] bg-white pt-32 px-6 md:hidden flex flex-col"
+    >
+        <div class="flex flex-col gap-8 text-4xl font-serif italic">
+            <a href="#coleccion" @click="isMenuOpen = false">Colección</a>
+            <a href="#historia" @click="isMenuOpen = false">Historia</a>
+            <a href="#contacto" @click="isMenuOpen = false">Contacto</a>
+        </div>
+        <div class="mt-auto pb-12">
+            <p class="text-[10px] uppercase tracking-[0.2em] font-bold text-slate-400 mb-4">Síguenos</p>
+            <a href="https://instagram.com/muly_studio" target="_blank" rel="noreferrer" class="text-xl font-serif text-rose-600">@muly_studio</a>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="relative h-[80vh] md:h-[90vh] flex items-center overflow-hidden pt-16 bg-white">
+        <div class="relative z-10 max-w-7xl mx-auto px-6 w-full">
+            <div class="max-w-xl">
+                <span class="text-[10px] uppercase tracking-[0.4em] font-bold text-rose-600 mb-6 block">Ediciones Limitadas</span>
+                <h1 class="text-6xl sm:text-7xl md:text-8xl lg:text-[10rem] font-serif leading-[0.8] mb-8 tracking-tighter">
+                    MULY
+                </h1>
+                <p class="text-lg md:text-xl font-serif italic text-slate-800 mb-10 leading-relaxed max-w-md">
+                    Accesorios únicos confeccionados artesanalmente con tejidos especiales de Liberty Fabrics.
+                </p>
+                <a 
+                    href="#coleccion"
+                    class="inline-flex items-center gap-4 bg-slate-900 text-white hover:bg-rose-600 px-10 py-5 rounded-full text-[10px] uppercase tracking-[0.2em] font-bold transition-all group shadow-xl"
+                >
+                    Explorar Colección
+                    <i data-lucide="arrow-right" class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Details -->
+    <section class="py-16 md:py-24 bg-white border-y border-slate-100">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-12 md:gap-16">
+                <div class="flex flex-col gap-4">
+                    <span class="text-rose-600 font-serif italic text-2xl">01.</span>
+                    <h3 class="font-serif text-xl">Liberty Fabrics</h3>
+                    <p class="text-sm text-slate-600 leading-relaxed font-light">Tejidos icónicos de Londres conocidos por su calidad y estampados florales atemporales.</p>
+                </div>
+                <div class="flex flex-col gap-4">
+                    <span class="text-rose-600 font-serif italic text-2xl">02.</span>
+                    <h3 class="font-serif text-xl">Artesanal</h3>
+                    <p class="text-sm text-slate-600 leading-relaxed font-light">Cada pieza está confeccionada a mano con cuidado y dedicación en cada puntada.</p>
+                </div>
+                <div class="flex flex-col gap-4">
+                    <span class="text-rose-600 font-serif italic text-2xl">03.</span>
+                    <h3 class="font-serif text-xl">Ediciones Limitadas</h3>
+                    <p class="text-sm text-slate-600 leading-relaxed font-light">Producciones muy reducidas para asegurar la exclusividad de cada accesorio.</p>
+                </div>
+                <div class="flex flex-col gap-4">
+                    <span class="text-rose-600 font-serif italic text-2xl">04.</span>
+                    <h3 class="font-serif text-xl">Piezas Únicas</h3>
+                    <p class="text-sm text-slate-600 leading-relaxed font-light">Accesorios sencillos pero con personalidad para elevar tu estilo diario.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Collection Section -->
+    <section id="coleccion" class="py-20 md:py-32 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-20 gap-8">
+                <div class="max-w-2xl">
+                    <h2 class="text-5xl sm:text-6xl md:text-8xl font-serif mb-6 md:mb-8 tracking-tighter">La Colección</h2>
+                    <p class="text-lg md:text-xl text-slate-600 font-light leading-relaxed">
+                        Diseños pensados para aportar color y elegancia a tus accesorios más personales.
+                    </p>
+                </div>
+                <div class="text-[10px] uppercase tracking-[0.2em] border-slate-900 pb-3 font-bold border-b">
+                    Ver todos los modelos
+                </div>
+            </div>
+
+            <div class="flex flex-wrap gap-4 mb-12">
+                <template x-for="cat in ['Todos', 'Flores', 'Clásicos', 'Geométricos']">
+                    <button
+                        @click="activeCategory = cat"
+                        :class="activeCategory === cat ? 'bg-rose-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'"
+                        class="px-6 py-2 rounded-full text-[10px] uppercase tracking-widest font-bold transition-all"
+                        x-text="cat"
+                    ></button>
+                </template>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 md:gap-x-12 gap-y-16 md:gap-y-20">
+                <template x-for="product in filteredProducts()" :key="product.id">
+                    <div class="group cursor-pointer">
+                        <div 
+                            @click="openProduct(product)"
+                            class="relative aspect-[4/5] overflow-hidden bg-slate-50 mb-8 rounded-sm hover:shadow-xl shadow-md transition-all duration-500"
+                        >
+                            <img 
+                                :src="product.mainImg" 
+                                :alt="product.name" 
+                                class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                                referrerpolicy="no-referrer"
+                            >
+                            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-500"></div>
+                            
+                            <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                                <div class="bg-white/90 backdrop-blur-sm px-8 py-4 rounded-full text-[10px] uppercase tracking-[0.2em] font-bold shadow-2xl">
+                                    Ver Detalles
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-start gap-4">
+                            <div class="flex-1">
+                                <h3 class="text-2xl font-serif mb-2" x-text="product.name"></h3>
+                                <p class="text-sm font-medium text-rose-600 tracking-widest mb-4" x-text="product.price"></p>
+                                <button 
+                                    @click="openProduct(product)"
+                                    class="text-[10px] uppercase tracking-[0.2em] font-bold text-slate-900 hover:text-rose-600 transition-colors"
+                                >
+                                    Ver detalles
+                                </button>
+                            </div>
+                            <button
+                                @click="toggleWishlist(product)"
+                                :class="isInWishlist(product.id) ? 'text-rose-600' : 'text-slate-300 hover:text-rose-500'"
+                                class="transition-colors cursor-pointer"
+                            >
+                                <i data-lucide="heart" :class="isInWishlist(product.id) ? 'fill-current' : ''" class="w-[18px] h-[18px]"></i>
+                            </button>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </section>
+
+    <!-- Story Section -->
+    <section id="historia" class="py-20 md:py-32 bg-rose-50/30">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="text-center">
+                <span class="text-[10px] uppercase tracking-[0.4em] font-bold text-rose-600 mb-8 block">Nuestra Esencia</span>
+                <h2 class="text-5xl sm:text-6xl md:text-8xl font-serif mb-8 md:mb-10 tracking-tighter">Nuestra Historia</h2>
+                <div class="space-y-8 text-lg text-slate-600 font-light leading-relaxed max-w-2xl mx-auto">
+                    <p>
+                        MULY nace como un pequeño proyecto creativo de Ceci, inspirado en la moda y en el gusto por los detalles. Lo que comenzó como una búsqueda personal de un accesorio práctico y estético, se convirtió en una marca dedicada a la artesanía.
+                    </p>
+                    <p>
+                        Cada correa se confecciona a mano utilizando tejidos seleccionados cuidadosamente, creando piezas únicas pensadas para acompañar el día a día. Trabajamos exclusivamente con Liberty Fabrics para asegurar que cada diseño no solo sea único, sino que tenga una historia de calidad detrás.
+                    </p>
+                    <div class="pt-6">
+                        <p class="italic font-serif text-3xl text-rose-600 leading-tight">
+                            "Accesorios sencillos pero especiales para elevar tu día a día."
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="py-20 md:py-32 bg-white">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="text-center mb-12 md:mb-20">
+                <span class="text-[10px] uppercase tracking-[0.4em] font-bold text-rose-600 mb-4 block">Ayuda</span>
+                <h2 class="text-4xl sm:text-5xl md:text-7xl font-serif tracking-tighter">Preguntas Frecuentes</h2>
+            </div>
+
+            <div class="space-y-4">
+                <template x-for="(faq, idx) in faqs" :key="idx">
+                    <div class="border-b border-slate-100">
+                        <button 
+                            @click="openFaq = openFaq === idx ? null : idx"
+                            class="w-full py-6 flex justify-between items-center text-left group"
+                        >
+                            <span class="text-xl font-serif group-hover:text-rose-600 transition-colors" x-text="faq.question"></span>
+                            <div
+                                :class="openFaq === idx ? 'rotate-180' : ''"
+                                class="transition-transform duration-300"
+                            >
+                                <i data-lucide="plus" class="w-5 h-5"></i>
+                            </div>
+                        </button>
+                        <div
+                            x-show="openFaq === idx"
+                            x-collapse
+                            class="overflow-hidden"
+                        >
+                            <p class="text-slate-600 pb-8 leading-relaxed" x-text="faq.answer"></p>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contacto" class="py-20 md:py-32 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24 items-start">
+                <div>
+                    <span class="text-[10px] uppercase tracking-[0.4em] font-bold text-rose-600 mb-8 block">Contacto</span>
+                    <h2 class="text-5xl sm:text-6xl md:text-8xl font-serif mb-8 md:mb-10 italic tracking-tighter">Hablemos</h2>
+                    <p class="text-xl font-light mb-16 text-slate-600 leading-relaxed">
+                        ¿Tienes alguna duda? Actualmente gestionamos todos nuestros pedidos a través de Instagram o WhatsApp.
+                    </p>
+                    
+                    <div class="space-y-10">
+                        <a href="https://instagram.com/muly_studio" target="_blank" rel="noopener noreferrer" class="flex items-center gap-6 group">
+                            <div class="w-14 h-14 rounded-full border border-slate-200 group-hover:bg-rose-600 group-hover:border-rose-600 group-hover:text-white flex items-center justify-center transition-all duration-500">
+                                <i data-lucide="instagram" class="w-[22px] h-[22px]"></i>
+                            </div>
+                            <div>
+                                <p class="text-[10px] uppercase tracking-[0.2em] opacity-50 font-bold mb-1">Instagram</p>
+                                <p class="text-xl font-serif">@muly_studio</p>
+                            </div>
+                        </a>
+
+                        <a href="https://wa.me/34660719095" target="_blank" rel="noopener noreferrer" class="flex items-center gap-6 group">
+                            <div class="w-14 h-14 rounded-full border border-slate-200 group-hover:bg-emerald-600 group-hover:border-emerald-600 group-hover:text-white flex items-center justify-center transition-all duration-500">
+                                <span class="text-xl">💬</span>
+                            </div>
+                            <div>
+                                <p class="text-[10px] uppercase tracking-[0.2em] opacity-50 font-bold mb-1">WhatsApp</p>
+                                <p class="text-xl font-serif">660 719 095</p>
+                            </div>
+                        </a>
+
+                        <div class="flex items-center gap-6">
+                            <div class="w-14 h-14 rounded-full border border-slate-200 text-rose-400 flex items-center justify-center">
+                                <i data-lucide="heart" class="w-[22px] h-[22px]"></i>
+                            </div>
+                            <div>
+                                <p class="text-[10px] uppercase tracking-[0.2em] opacity-50 font-bold mb-1">Ubicación</p>
+                                <p class="text-xl font-serif">Madrid, España</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 p-12 md:p-16 rounded-sm border border-slate-100">
+                    <h3 class="text-3xl font-serif mb-10 tracking-tight">Cómo realizar tu pedido</h3>
+                    <div class="space-y-10">
+                        <div class="flex gap-6">
+                            <span class="font-serif italic text-rose-600 text-2xl font-bold">1.</span>
+                            <p class="text-slate-600 font-light">Explora nuestra colección y elige los productos que más te gusten.</p>
+                        </div>
+                        <div class="flex gap-6">
+                            <span class="font-serif italic text-rose-600 text-2xl font-bold">2.</span>
+                            <p class="text-slate-600 font-light">Haz clic en "Consultar por Instagram" o "WhatsApp" en la ficha del producto.</p>
+                        </div>
+                        <div class="flex gap-6">
+                            <span class="font-serif italic text-rose-600 text-2xl font-bold">3.</span>
+                            <p class="text-slate-600 font-light">Te confirmaremos disponibilidad y gestionaremos tu pedido. ¡Gracias por tu confianza!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-20 bg-white border-slate-100 border-t">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-12 mb-16">
+                <div class="text-4xl font-serif tracking-tighter font-medium">MULY</div>
+                <div class="flex gap-12 text-[10px] uppercase tracking-[0.2em] font-bold text-slate-400">
+                    <a href="#coleccion" class="hover:text-rose-600 transition-colors">Colección</a>
+                    <a href="#historia" class="hover:text-rose-600 transition-colors">Historia</a>
+                    <a href="#contacto" class="hover:text-rose-600 transition-colors">Contacto</a>
+                </div>
+                <div class="flex gap-6">
+                    <a href="https://instagram.com/muly_studio" target="_blank" class="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center hover:bg-rose-600 hover:text-white transition-all">
+                        <i data-lucide="instagram" class="w-4 h-4"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="pt-12 border-t border-slate-50 flex flex-col md:flex-row justify-between items-center gap-6">
+                <p class="text-[10px] uppercase tracking-widest text-slate-400">© 2026 MULY Studio. Hecho a mano en Madrid.</p>
+                <div class="flex gap-8 text-[10px] uppercase tracking-widest font-bold text-slate-400">
+                    <a href="#" class="hover:text-rose-600 transition-colors">Privacidad</a>
+                    <a href="#" class="hover:text-rose-600 transition-colors">Términos</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Wishlist Modal -->
+    <div 
+        x-show="isWishlistOpen" 
+        x-cloak
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+        class="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm flex items-center justify-end"
+        @click="isWishlistOpen = false"
+    >
+        <div 
+            x-show="isWishlistOpen"
+            x-transition:enter="transition ease-out duration-300 transform"
+            x-transition:enter-start="translate-x-full"
+            x-transition:enter-end="translate-x-0"
+            x-transition:leave="transition ease-in duration-200 transform"
+            x-transition:leave-start="translate-x-0"
+            x-transition:leave-end="translate-x-full"
+            @click.stop
+            class="bg-white w-full max-w-md h-full shadow-2xl p-8 overflow-y-auto flex flex-col"
+        >
+            <div class="flex justify-between items-center mb-12">
+                <h2 class="text-4xl font-serif">Tus Favoritos</h2>
+                <button @click="isWishlistOpen = false">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+
+            <template x-if="wishlist.length === 0">
+                <div class="flex-1 flex flex-col items-center justify-center text-center space-y-6">
+                    <div class="w-20 h-20 rounded-full bg-rose-50 flex items-center justify-center text-rose-300">
+                        <i data-lucide="heart" class="w-10 h-10"></i>
+                    </div>
+                    <div>
+                        <p class="text-xl font-serif mb-2">Tu lista está vacía</p>
+                        <p class="text-slate-600 text-sm">Guarda los modelos que más te gusten para tenerlos siempre a mano.</p>
+                    </div>
+                    <button 
+                        @click="isWishlistOpen = false; window.location.href = '#coleccion'"
+                        class="bg-slate-900 text-white px-8 py-4 rounded-full text-[10px] uppercase tracking-widest font-bold"
+                    >
+                        Explorar Colección
+                    </button>
+                </div>
+            </template>
+
+            <template x-if="wishlist.length > 0">
+                <div class="space-y-8 flex-1">
+                    <template x-for="item in wishlist" :key="item.id">
+                        <div class="flex gap-6 group">
+                            <div class="w-24 h-32 bg-slate-100 rounded-sm overflow-hidden flex-shrink-0">
+                                <img :src="getProductById(item.id).mainImg" :alt="item.name" class="w-full h-full object-cover">
+                            </div>
+                            <div class="flex-1 flex flex-col justify-between py-1">
+                                <div>
+                                    <h3 class="font-serif text-lg" x-text="item.name"></h3>
+                                    <p class="text-rose-600 font-medium text-sm tracking-widest" x-text="item.price"></p>
+                                </div>
+                                <div class="flex items-center gap-4">
+                                    <button 
+                                        @click="openProduct(getProductById(item.id)); isWishlistOpen = false"
+                                        class="text-[10px] uppercase tracking-widest font-bold text-slate-400 hover:text-rose-600 transition-colors"
+                                    >
+                                        Ver detalles
+                                    </button>
+                                    <button 
+                                        @click="toggleWishlist(getProductById(item.id))"
+                                        class="text-[10px] uppercase tracking-widest font-bold text-rose-300 hover:text-rose-600 transition-colors flex items-center gap-1"
+                                    >
+                                        <i data-lucide="trash-2" class="w-3 h-3"></i>
+                                        Eliminar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </template>
+
+            <template x-if="wishlist.length > 0">
+                <div class="pt-8 border-t border-slate-100 mt-8">
+                    <p class="text-sm text-slate-600 mb-6 italic">
+                        Para realizar tu pedido, envíanos una captura de tus favoritos por Instagram o WhatsApp.
+                    </p>
+                    <div class="grid grid-cols-2 gap-4">
+                        <a 
+                            href="https://instagram.com/muly_studio"
+                            target="_blank"
+                            class="bg-slate-900 text-white py-4 rounded-full text-[10px] uppercase tracking-widest font-bold text-center"
+                        >
+                            Instagram
+                        </a>
+                        <a 
+                            href="https://wa.me/34660719095"
+                            target="_blank"
+                            class="bg-emerald-600 text-white py-4 rounded-full text-[10px] uppercase tracking-widest font-bold text-center"
+                        >
+                            WhatsApp
+                        </a>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </div>
+
+    <!-- Product Detail Modal -->
+    <div 
+        x-show="selectedProduct" 
+        x-cloak
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+        class="fixed inset-0 z-[80] bg-black/50 backdrop-blur-sm flex items-center justify-center p-6"
+        @click="selectedProduct = null"
+    >
+        <div 
+            x-show="selectedProduct"
+            x-transition:enter="transition ease-out duration-300 transform"
+            x-transition:enter-start="scale-90 opacity-0"
+            x-transition:enter-end="scale-100 opacity-100"
+            x-transition:leave="transition ease-in duration-200 transform"
+            x-transition:leave-start="scale-100 opacity-100"
+            x-transition:leave-end="scale-90 opacity-0"
+            @click.stop
+            class="bg-white rounded-sm max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+        >
+            <template x-if="selectedProduct">
+                <div class="p-6 sm:p-8 space-y-6 sm:space-y-8">
+                    <div class="flex justify-between items-start gap-4">
+                        <h2 class="text-3xl sm:text-4xl font-serif" x-text="selectedProduct.name"></h2>
+                        <button @click="selectedProduct = null">
+                            <i data-lucide="x" class="w-6 h-6"></i>
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                        <div class="space-y-4">
+                            <img :src="selectedProduct.mainImg" :alt="selectedProduct.name" class="w-full aspect-[3/4] object-cover rounded-sm">
+                            <div class="grid grid-cols-2 gap-4">
+                                <img :src="selectedProduct.useImg" alt="Uso" class="w-full aspect-square object-cover rounded-sm">
+                                <img :src="selectedProduct.detailImg" alt="Detalle" class="w-full aspect-square object-cover rounded-sm">
+                            </div>
+                        </div>
+
+                        <div class="space-y-8">
+                            <div>
+                                <p class="text-3xl font-semibold text-rose-600 mb-4" x-text="selectedProduct.price"></p>
+                                <p class="text-slate-600 leading-relaxed text-lg mb-8">
+                                    Correa artesanal confeccionada a mano con tejidos premium de Liberty Fabrics. Edición limitada con acabados de alta calidad.
+                                </p>
+                            </div>
+
+                            <div class="space-y-4">
+                                <h3 class="font-serif text-xl">Características:</h3>
+                                <ul class="space-y-3 text-slate-600 text-sm">
+                                    <li>✓ Confeccionada a mano</li>
+                                    <li>✓ Tejidos de Liberty Fabrics</li>
+                                    <li>✓ Herrajes de alta calidad</li>
+                                    <li>✓ Edición limitada</li>
+                                    <li>✓ Hecho en Madrid, España</li>
+                                </ul>
+                            </div>
+
+                            <div class="space-y-3">
+                                <a 
+                                    :href="'https://instagram.com/muly_studio'"
+                                    target="_blank"
+                                    class="w-full bg-slate-900 text-white py-5 rounded-full text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-rose-600 transition-all text-center block"
+                                >
+                                    Consultar por Instagram
+                                </a>
+                                
+                                <a 
+                                    :href="'https://wa.me/34660719095?text=' + encodeURIComponent('Hola! Me gustaría consultar sobre el modelo: ' + selectedProduct.name)"
+                                    target="_blank"
+                                    class="w-full bg-emerald-600 text-white py-5 rounded-full text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-emerald-700 transition-all text-center block"
+                                >
+                                    Consultar por WhatsApp
+                                </a>
+                                
+                                <button 
+                                    @click="toggleWishlist(selectedProduct)"
+                                    :class="isInWishlist(selectedProduct.id) ? 'bg-rose-100 text-rose-600' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'"
+                                    class="w-full py-3 rounded-full text-[10px] uppercase tracking-[0.2em] font-bold transition-all"
+                                    x-text="isInWishlist(selectedProduct.id) ? '❤️ Añadido a favoritos' : '♡ Añadir a favoritos'"
+                                ></button>
+                            </div>
+
+                            <div class="space-y-2 pt-4 border-t border-slate-100">
+                                <p class="text-[10px] uppercase tracking-widest font-bold text-slate-600">Compartir:</p>
+                                <div class="grid grid-cols-4 gap-2">
+                                    <button @click="shareOnSocial('instagram')" class="p-3 bg-rose-100 hover:bg-rose-200 rounded-lg transition-colors">📷</button>
+                                    <button @click="shareOnSocial('whatsapp')" class="p-3 bg-green-100 hover:bg-green-200 rounded-lg transition-colors">💬</button>
+                                    <button @click="shareOnSocial('twitter')" class="p-3 bg-blue-100 hover:bg-blue-200 rounded-lg transition-colors">𝕏</button>
+                                    <button @click="shareOnSocial('facebook')" class="p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors">f</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </div>
+
+    <script>
+        function mulyApp() {
+            return {
+                isMenuOpen: false,
+                isWishlistOpen: false,
+                selectedProduct: null,
+                activeCategory: 'Todos',
+                openFaq: null,
+                wishlist: JSON.parse(localStorage.getItem('mulyWishlist') || '[]'),
+                products: [
+                    {
+                        id: 1,
+                        name: "Correa Lisboa MULY",
+                        mainImg: "https://i.ibb.co/JFQr5Yxn/Chat-GPT-Image-20-mar-2026-16-38-20.png",
+                        useImg: "https://i.ibb.co/JFQr5Yxn/Chat-GPT-Image-20-mar-2026-16-38-20.png",
+                        detailImg: "https://i.ibb.co/JFQr5Yxn/Chat-GPT-Image-20-mar-2026-16-38-20.png",
+                        price: "12€",
+                        category: "Flores"
+                    },
+                    {
+                        id: 2,
+                        name: "Correa Siena MULY",
+                        mainImg: "https://i.ibb.co/pvxtj5By/Chat-GPT-Image-20-mar-2026-16-24-59.png",
+                        useImg: "https://i.ibb.co/pvxtj5By/Chat-GPT-Image-20-mar-2026-16-24-59.png",
+                        detailImg: "https://i.ibb.co/pvxtj5By/Chat-GPT-Image-20-mar-2026-16-24-59.png",
+                        price: "12€",
+                        category: "Clásicos"
+                    },
+                    {
+                        id: 3,
+                        name: "Correa Praga MULY",
+                        mainImg: "https://i.ibb.co/Vptr8Nm5/Chat-GPT-Image-20-mar-2026-16-47-10.png",
+                        useImg: "https://i.ibb.co/Vptr8Nm5/Chat-GPT-Image-20-mar-2026-16-47-10.png",
+                        detailImg: "https://i.ibb.co/Vptr8Nm5/Chat-GPT-Image-20-mar-2026-16-47-10.png",
+                        price: "12€",
+                        category: "Flores"
+                    },
+                    {
+                        id: 4,
+                        name: "Correa Ceuta MULY",
+                        mainImg: "https://i.ibb.co/d4nF4d8J/Chat-GPT-Image-20-mar-2026-16-26-33.png",
+                        useImg: "https://i.ibb.co/d4nF4d8J/Chat-GPT-Image-20-mar-2026-16-26-33.png",
+                        detailImg: "https://i.ibb.co/d4nF4d8J/Chat-GPT-Image-20-mar-2026-16-26-33.png",
+                        price: "12€",
+                        category: "Geométricos"
+                    },
+                    {
+                        id: 5,
+                        name: "Correa Roma MULY",
+                        mainImg: "https://i.ibb.co/FLHjMjGX/Chat-GPT-Image-20-mar-2026-16-32-19.png",
+                        useImg: "https://i.ibb.co/FLHjMjGX/Chat-GPT-Image-20-mar-2026-16-32-19.png",
+                        detailImg: "https://i.ibb.co/FLHjMjGX/Chat-GPT-Image-20-mar-2026-16-32-19.png",
+                        price: "12€",
+                        category: "Clásicos"
+                    },
+                    {
+                        id: 6,
+                        name: "Correa Malta MULY",
+                        mainImg: "https://i.ibb.co/R4bVGxGS/Chat-GPT-Image-20-mar-2026-16-33-56.png",
+                        useImg: "https://i.ibb.co/R4bVGxGS/Chat-GPT-Image-20-mar-2026-16-33-56.png",
+                        detailImg: "https://i.ibb.co/R4bVGxGS/Chat-GPT-Image-20-mar-2026-16-33-56.png",
+                        price: "12€",
+                        category: "Flores"
+                    }
+                ],
+                faqs: [
+                    {
+                        question: "¿Cómo realizo un pedido?",
+                        answer: "Actualmente gestionamos todos los pedidos a través de Instagram o WhatsApp. Solo tienes que enviarnos un mensaje con los modelos que te gustan."
+                    },
+                    {
+                        question: "¿Cuáles son los gastos de envío?",
+                        answer: "Disfruta de envío gratuito en pedidos superiores a 35€. Para el resto de pedidos, calculamos el coste de forma personalizada según tu ubicación para ofrecerte la tarifa más justa."
+                    },
+                    {
+                        question: "¿Cuánto tarda en llegar mi pedido?",
+                        answer: "Al ser productos hechos a mano, el tiempo de confección es de 2-4 días hábiles. El envío suele tardar otros 24-48h."
+                    },
+                    {
+                        question: "¿Aceptáis devoluciones?",
+                        answer: "Dispones de 14 días naturales para devolver tu pedido si no estás satisfecho. El producto debe estar en su estado original. Nota: Los gastos de envío de la devolución corren a cargo del cliente, salvo en caso de producto defectuoso."
+                    }
+                ],
+                initIcons() {
+                    lucide.createIcons();
+                },
+                filteredProducts() {
+                    if (this.activeCategory === 'Todos') return this.products;
+                    return this.products.filter(p => p.category === this.activeCategory);
+                },
+                getProductById(id) {
+                    return this.products.find(p => p.id === id);
+                },
+                toggleWishlist(product) {
+                    const index = this.wishlist.findIndex(item => item.id === product.id);
+                    if (index > -1) {
+                        this.wishlist.splice(index, 1);
+                    } else {
+                        this.wishlist.push({
+                            id: product.id,
+                            name: product.name,
+                            price: product.price
+                        });
+                    }
+                    localStorage.setItem('mulyWishlist', JSON.stringify(this.wishlist));
+                },
+                isInWishlist(id) {
+                    return this.wishlist.some(item => item.id === id);
+                },
+                openProduct(product) {
+                    this.selectedProduct = product;
+                    this.$nextTick(() => this.initIcons());
+                },
+                shareOnSocial(platform) {
+                    const text = "Mira estos accesorios artesanales de MULY - Correas hechas a mano con tejidos Liberty Fabrics 🌸";
+                    const url = window.location.href;
+                    const links = {
+                        instagram: `https://instagram.com/muly_studio`,
+                        twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`,
+                        facebook: `https://facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
+                        whatsapp: `https://wa.me/?text=${encodeURIComponent(text + " " + url)}`
+                    };
+                    window.open(links[platform], "_blank");
+                }
+            }
+        }
+    </script>
+</body>
+</html>
