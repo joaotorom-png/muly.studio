@@ -168,19 +168,8 @@
                 </div>
             </div>
 
-            <div class="flex flex-wrap gap-4 mb-12">
-                <template x-for="cat in ['Todos', 'Flores', 'Clásicos', 'Geométricos']">
-                    <button
-                        @click="activeCategory = cat"
-                        :class="activeCategory === cat ? 'bg-rose-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'"
-                        class="px-6 py-2 rounded-full text-[10px] uppercase tracking-widest font-bold transition-all"
-                        x-text="cat"
-                    ></button>
-                </template>
-            </div>
-
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 md:gap-x-12 gap-y-16 md:gap-y-20">
-                <template x-for="product in filteredProducts()" :key="product.id">
+                <template x-for="product in products" :key="product.id">
                     <div class="group cursor-pointer">
                         <div 
                             @click="openProduct(product)"
@@ -591,7 +580,6 @@
                 isMenuOpen: false,
                 isWishlistOpen: false,
                 selectedProduct: null,
-                activeCategory: 'Todos',
                 openFaq: null,
                 wishlist: JSON.parse(localStorage.getItem('mulyWishlist') || '[]'),
                 products: [
@@ -601,8 +589,7 @@
                         mainImg: "https://i.ibb.co/JFQr5Yxn/Chat-GPT-Image-20-mar-2026-16-38-20.png",
                         useImg: "https://i.ibb.co/JFQr5Yxn/Chat-GPT-Image-20-mar-2026-16-38-20.png",
                         detailImg: "https://i.ibb.co/JFQr5Yxn/Chat-GPT-Image-20-mar-2026-16-38-20.png",
-                        price: "12€",
-                        category: "Flores"
+                        price: "12€"
                     },
                     {
                         id: 2,
@@ -610,8 +597,7 @@
                         mainImg: "https://i.ibb.co/pvxtj5By/Chat-GPT-Image-20-mar-2026-16-24-59.png",
                         useImg: "https://i.ibb.co/pvxtj5By/Chat-GPT-Image-20-mar-2026-16-24-59.png",
                         detailImg: "https://i.ibb.co/pvxtj5By/Chat-GPT-Image-20-mar-2026-16-24-59.png",
-                        price: "12€",
-                        category: "Clásicos"
+                        price: "12€"
                     },
                     {
                         id: 3,
@@ -619,8 +605,7 @@
                         mainImg: "https://i.ibb.co/Vptr8Nm5/Chat-GPT-Image-20-mar-2026-16-47-10.png",
                         useImg: "https://i.ibb.co/Vptr8Nm5/Chat-GPT-Image-20-mar-2026-16-47-10.png",
                         detailImg: "https://i.ibb.co/Vptr8Nm5/Chat-GPT-Image-20-mar-2026-16-47-10.png",
-                        price: "12€",
-                        category: "Flores"
+                        price: "12€"
                     },
                     {
                         id: 4,
@@ -628,8 +613,7 @@
                         mainImg: "https://i.ibb.co/d4nF4d8J/Chat-GPT-Image-20-mar-2026-16-26-33.png",
                         useImg: "https://i.ibb.co/d4nF4d8J/Chat-GPT-Image-20-mar-2026-16-26-33.png",
                         detailImg: "https://i.ibb.co/d4nF4d8J/Chat-GPT-Image-20-mar-2026-16-26-33.png",
-                        price: "12€",
-                        category: "Geométricos"
+                        price: "12€"
                     },
                     {
                         id: 5,
@@ -637,8 +621,7 @@
                         mainImg: "https://i.ibb.co/FLHjMjGX/Chat-GPT-Image-20-mar-2026-16-32-19.png",
                         useImg: "https://i.ibb.co/FLHjMjGX/Chat-GPT-Image-20-mar-2026-16-32-19.png",
                         detailImg: "https://i.ibb.co/FLHjMjGX/Chat-GPT-Image-20-mar-2026-16-32-19.png",
-                        price: "12€",
-                        category: "Clásicos"
+                        price: "12€"
                     },
                     {
                         id: 6,
@@ -646,8 +629,7 @@
                         mainImg: "https://i.ibb.co/R4bVGxGS/Chat-GPT-Image-20-mar-2026-16-33-56.png",
                         useImg: "https://i.ibb.co/R4bVGxGS/Chat-GPT-Image-20-mar-2026-16-33-56.png",
                         detailImg: "https://i.ibb.co/R4bVGxGS/Chat-GPT-Image-20-mar-2026-16-33-56.png",
-                        price: "12€",
-                        category: "Flores"
+                        price: "12€"
                     }
                 ],
                 faqs: [
@@ -670,10 +652,6 @@
                 ],
                 initIcons() {
                     lucide.createIcons();
-                },
-                filteredProducts() {
-                    if (this.activeCategory === 'Todos') return this.products;
-                    return this.products.filter(p => p.category === this.activeCategory);
                 },
                 getProductById(id) {
                     return this.products.find(p => p.id === id);
@@ -714,3 +692,4 @@
     </script>
 </body>
 </html>
+
