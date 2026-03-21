@@ -182,12 +182,12 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 md:gap-x-12 gap-y-16 md:gap-y-20">
+            <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 sm:gap-x-8 md:gap-x-12 gap-y-8 sm:gap-y-16 md:gap-y-20">
                 <template x-for="product in products" :key="product.id">
                     <div class="group cursor-pointer">
                         <div 
                             @click="openProduct(product)"
-                            class="relative aspect-[4/5] overflow-hidden bg-slate-50 mb-8 rounded-sm hover:shadow-xl shadow-md transition-all duration-500"
+                            class="relative aspect-[4/5] overflow-hidden bg-slate-50 mb-4 sm:mb-8 rounded-sm hover:shadow-xl shadow-md transition-all duration-500"
                         >
                             <img 
                                 :src="product.mainImg" 
@@ -198,18 +198,18 @@
                             <div class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-500"></div>
                             
                             <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                                <div class="bg-white/90 backdrop-blur-sm px-8 py-4 rounded-full text-[10px] uppercase tracking-[0.2em] font-bold shadow-2xl">
+                                <div class="bg-white/90 backdrop-blur-sm px-4 sm:px-8 py-2 sm:py-4 rounded-full text-[8px] sm:text-[10px] uppercase tracking-[0.2em] font-bold shadow-2xl">
                                     Ver Detalles
                                 </div>
                             </div>
                         </div>
-                        <div class="flex justify-between items-start gap-4">
+                        <div class="flex justify-between items-start gap-2 sm:gap-4">
                             <div class="flex-1">
-                                <h3 class="text-2xl font-serif mb-2" x-text="product.name"></h3>
-                                <p class="text-sm font-medium text-rose-600 tracking-widest mb-4" x-text="product.price"></p>
+                                <h3 class="text-base sm:text-2xl font-serif mb-1 sm:mb-2" x-text="product.name"></h3>
+                                <p class="text-xs sm:text-sm font-medium text-rose-600 tracking-widest mb-2 sm:mb-4" x-text="product.price"></p>
                                 <button 
                                     @click="openProduct(product)"
-                                    class="text-[10px] uppercase tracking-[0.2em] font-bold text-slate-900 hover:text-rose-600 transition-colors"
+                                    class="text-[8px] sm:text-[10px] uppercase tracking-[0.2em] font-bold text-slate-900 hover:text-rose-600 transition-colors"
                                 >
                                     Ver detalles
                                 </button>
@@ -219,7 +219,7 @@
                                 :class="isInWishlist(product.id) ? 'text-rose-600' : 'text-slate-300 hover:text-rose-500'"
                                 class="transition-colors cursor-pointer"
                             >
-                                <i data-lucide="heart" :class="isInWishlist(product.id) ? 'fill-current' : ''" class="w-[18px] h-[18px]"></i>
+                                <i data-lucide="heart" :class="isInWishlist(product.id) ? 'fill-current' : ''" class="w-4 h-4 sm:w-[18px] sm:h-[18px]"></i>
                             </button>
                         </div>
                     </div>
