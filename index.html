@@ -30,6 +30,15 @@
         [x-cloak] { display: none !important; }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+            display: inline-flex;
+            animation: marquee 20s linear infinite;
+        }
     </style>
 </head>
 <body 
@@ -38,8 +47,13 @@
     x-init="initIcons()"
 >
     <!-- Announcement Bar -->
-    <div class="bg-slate-900 text-white py-2 text-center text-[10px] uppercase tracking-[0.2em] font-medium z-[60] relative overflow-x-auto whitespace-nowrap px-4 scrollbar-hide">
-        Envío gratuito en pedidos superiores a 35€ • Hecho a mano con amor
+    <div class="bg-slate-900 text-white py-2 overflow-hidden whitespace-nowrap z-[60] relative">
+        <div class="animate-marquee text-[10px] uppercase tracking-[0.2em] font-medium px-4">
+            <span>Envío gratuito en pedidos superiores a 35€ • Hecho a mano con amor &nbsp;&nbsp;</span>
+            <span>Envío gratuito en pedidos superiores a 35€ • Hecho a mano con amor &nbsp;&nbsp;</span>
+            <span>Envío gratuito en pedidos superiores a 35€ • Hecho a mano con amor &nbsp;&nbsp;</span>
+            <span>Envío gratuito en pedidos superiores a 35€ • Hecho a mano con amor &nbsp;&nbsp;</span>
+        </div>
     </div>
 
     <!-- Navigation -->
@@ -692,4 +706,3 @@
     </script>
 </body>
 </html>
-
