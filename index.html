@@ -704,7 +704,7 @@
                                                 Instagram
                                             </a>
                                             <a 
-                                                :href="'https://wa.me/34660719095?text=' + encodeURIComponent('Hola! Me gustaría consultar sobre el modelo: ' + selectedProduct.name)"
+                                                :href="getSingleProductWhatsAppLink(selectedProduct)"
                                                 target="_blank"
                                                 class="bg-emerald-50 text-emerald-700 border border-emerald-100 py-4 rounded-full text-[8px] uppercase tracking-[0.2em] font-bold hover:bg-emerald-100 transition-all text-center block"
                                             >
@@ -1087,8 +1087,28 @@
                     return baseTotal + shipping;
                 },
                 get finalOrderLink() {
+                    return this.generateWhatsAppLink(this.cart);
+                },
+                getSingleProductWhatsAppLink(product) {
+                    if (!product) return '#';
+                    const priceValue = parseFloat(product.price.replace('€', ''));
+                    const totalItemPrice = this.isGiftSelected ? priceValue + 2 : priceValue;
+                    
+                    const singleItem = {
+                        product: product,
+                        size: this.selectedSize,
+                        isGift: this.isGiftSelected,
+                        giftMessage: this.isGiftSelected ? this.giftMessage : '',
+                        totalPrice: totalItemPrice
+                    };
+                    
+                    return this.generateWhatsAppLink([singleItem]);
+                },
+                generateWhatsAppLink(items) {
+                    if (items.length === 0) return '#';
+                    
                     let text = `¡Hola MULY! 👋\n\nMe gustaría realizar el siguiente pedido:\n\n`;
-                    this.cart.forEach((item, i) => {
+                    items.forEach((item) => {
                         text += `🔸 *${item.product.name}* (${item.size}) - €${item.totalPrice.toFixed(2)}\n`;
                         if (item.isGift) {
                             text += `   🎁 Opción Regalo (+2,00€)\n`;
@@ -1099,10 +1119,13 @@
                         text += `\n`;
                     });
                     
-                    const shipping = this.cart.length >= 2 ? 0 : 4.90;
+                    const itemsTotal = items.reduce((sum, item) => sum + item.totalPrice, 0);
+                    const shipping = items.length >= 2 ? 0 : 4.90;
+                    const finalTotal = itemsTotal + shipping;
+                    
                     text += `--------------------------\n`;
                     text += `📦 Envío: ${shipping === 0 ? 'GRATIS (Lote Verano)' : '€4.90'}\n`;
-                    text += `💰 *TOTAL: €${this.finalCartTotal.toFixed(2)}*\n\n`;
+                    text += `💰 *TOTAL: €${finalTotal.toFixed(2)}*\n\n`;
                     text += `Quedo a la espera para gestionar el pago y envío. ¡Gracias! ✨`;
                     
                     return `https://wa.me/34660719095?text=${encodeURIComponent(text)}`;
